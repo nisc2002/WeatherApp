@@ -76,7 +76,7 @@ class WeatherOverviewPage extends StatelessWidget {
         Expanded(
           flex: 3,
           child: FittedBox(
-            child: BoxedIcon(WeatherIcons.cloud),
+            child: BoxedIcon(weather.icon),
             fit: BoxFit.fitHeight,
           ),
         ),
