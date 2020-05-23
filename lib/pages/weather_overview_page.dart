@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/bloc/weather_bloc.dart';
+import 'package:weather_app/data/model/weather.dart';
 import 'package:weather_icons/weather_icons.dart';
 
 class WeatherOverviewPage extends StatelessWidget {
@@ -17,18 +20,28 @@ class WeatherOverviewPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              recentCityButton("Winterthur"),
-              recentCityButton("Zürich"),
-              recentCityButton("Bern"),
+              recentCityButton(context, "Winterthur"),
+              recentCityButton(context, "Zürich"),
+              recentCityButton(context, "Bern"),
             ],
           ),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
-              child: Container(
+              child: BlocBuilder<WeatherBloc, WeatherState>(
                 //color: Colors.red,
                 //alignment: Alignment.center,
-                child: weatherInfo("Winterthur"),
+                builder: (context, state) {
+                  if (state is WeatherInitial) {
+                    return buildInitial();
+                  } else if (state is WeatherLoading) {
+                    return buildLoading();
+                  } else if (state is WeatherLoaded) {
+                    return buildWeatherInfo(state.weather);
+                  }
+                  return buildInitial();
+                },
+                //child: weatherInfo("Winterthur"),
               ),
             ),
           ),
@@ -37,7 +50,7 @@ class WeatherOverviewPage extends StatelessWidget {
     );
   }
 
-  Widget weatherInfo(String cityName) {
+  Widget buildWeatherInfo(Weather weather) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,11 +59,19 @@ class WeatherOverviewPage extends StatelessWidget {
           flex: 1,
           child: Center(
             child: Text(
-              cityName,
+              weather.cityName,
               style: TextStyle(fontSize: 60),
             ),
           ),
         ),
+        Text(weather.condition,
+        style: TextStyle(fontSize: 40),),
+        /*Expanded(
+          flex: 0.5,
+          child: Center(
+            child: Text(weather.condition),
+          )
+          ),*/
         //Text(cityName),
         Expanded(
           flex: 3,
@@ -63,7 +84,7 @@ class WeatherOverviewPage extends StatelessWidget {
             flex: 1,
             child: Center(
               child: Text(
-                "23° C",
+                "${weather.celsius} °C",
                 style: TextStyle(fontSize: 50),
               ),
             )),
@@ -71,7 +92,7 @@ class WeatherOverviewPage extends StatelessWidget {
     );
   }
 
-  Widget recentCityButton(String cityName) {
+  Widget recentCityButton(BuildContext context, String cityName) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(6.0),
@@ -81,9 +102,20 @@ class WeatherOverviewPage extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
           color: Colors.grey[200],
-          onPressed: () {}, // TODO: implement call
+          onPressed: () {
+            final weatherBloc = BlocProvider.of<WeatherBloc>(context);
+            weatherBloc.add(GetWeather(cityName));
+          }, // TODO: implement call
         ),
       ),
     );
+  }
+
+  Widget buildLoading() {
+    return CircularProgressIndicator();
+  }
+
+  Widget buildInitial() {
+    return Container(color: Colors.blue,);
   }
 }

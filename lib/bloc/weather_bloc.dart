@@ -22,7 +22,8 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
     yield WeatherLoading();
     if (event is GetWeather) {
       try {
-        
+        final weather = await weatherRepository.fetchWeather(event.cityName);
+        yield WeatherLoaded(weather);
       }
       on NetworkError{
         yield WeatherError("Verbindung fehlgeschlagen");
