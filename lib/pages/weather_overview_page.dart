@@ -11,6 +11,15 @@ class WeatherOverviewPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: Text("Wetter"),
+        actions: <Widget>[
+          IconButton(
+              icon: Icon(Icons.search),
+              onPressed: () async{
+                WeatherEvent event = await showSearch(context: context, delegate: CitySearch());
+                //print(event);
+                event != null ? BlocProvider.of<WeatherBloc>(context).add(event) : null;
+              })
+        ],
       ),
       body: Column(
         //mainAxisAlignment: MainAxisAlignment.,
@@ -64,8 +73,10 @@ class WeatherOverviewPage extends StatelessWidget {
             ),
           ),
         ),
-        Text(weather.condition,
-        style: TextStyle(fontSize: 40),),
+        Text(
+          weather.condition,
+          style: TextStyle(fontSize: 40),
+        ),
         /*Expanded(
           flex: 0.5,
           child: Center(
@@ -105,7 +116,7 @@ class WeatherOverviewPage extends StatelessWidget {
           onPressed: () {
             final weatherBloc = BlocProvider.of<WeatherBloc>(context);
             weatherBloc.add(GetWeather(cityName));
-          }, // TODO: implement call
+          },
         ),
       ),
     );
@@ -116,6 +127,89 @@ class WeatherOverviewPage extends StatelessWidget {
   }
 
   Widget buildInitial() {
-    return Container(color: Colors.blue,);
+    return Container(
+      color: Colors.blue,
+    );
+  }
+}
+
+class CitySearch extends SearchDelegate<WeatherEvent> {
+  final List<String> cities = [
+    "Winterthur",
+    "Zürich",
+    "Genf",
+    "Basel",
+    "Thurgau",
+    "Uri",
+    "Bern",
+  ];
+
+  final List<String> recentCities = [
+    "Winterthur",
+    "Zürich",
+    "Bern",
+  ];
+
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    //return [IconButton(icon: Icon(Icons.lock), onPressed: () {})];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(icon: Icon(Icons.close), onPressed: () {
+      close(context, null);
+    });
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    List<String> suggestions = [];
+    if (query.isEmpty) {
+      suggestions = recentCities;
+    } else {
+      for (int i = 0; i < cities.length; i++) {
+        if (cities[i].toLowerCase().startsWith(query.toLowerCase())) {
+          suggestions.add(cities[i]);
+        }
+      }
+    }
+
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        leading: Icon(Icons.location_city),
+        title: Text(suggestions[index]),
+        onTap:  () {
+          close(context, GetWeather(suggestions[index]));
+          },
+      ),
+      itemCount: suggestions.length,
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    List<String> suggestions = [];
+    if (query.isEmpty) {
+      suggestions = recentCities;
+    } else {
+      for (int i = 0; i < cities.length; i++) {
+        if (cities[i].toLowerCase().startsWith(query.toLowerCase())) {
+          suggestions.add(cities[i]);
+        }
+      }
+    }
+
+    return ListView.builder(
+      itemBuilder: (context, index) => ListTile(
+        leading: Icon(Icons.location_city),
+        title: Text(suggestions[index]),
+        onTap: () {
+          close(context, GetWeather(suggestions[index]));
+        },
+      ),
+      itemCount: suggestions.length,
+    );
   }
 }
