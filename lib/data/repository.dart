@@ -15,8 +15,10 @@ class ExternWeatherRepository implements WeatherRepository {
     var response = await http.post(url, headers: {
       "Accept": "application/json"
     });
-    
-    print(response.statusCode);
+    if (response.statusCode != 200) {
+      throw NetworkError;
+    }
+    //print(response.statusCode);
     var data = json.decode(response.body);
 
     return Weather(

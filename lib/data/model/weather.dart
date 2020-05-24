@@ -24,10 +24,10 @@ class Weather {
         return WeatherIcons.rain_mix;
         break;
       case "Rain":
-        return WeatherIcons.rain_mix;
+        return WeatherIcons.rain;
         break;
       case "Snow":
-        return WeatherIcons.rain_mix;
+        return WeatherIcons.snow;
         break;
       case "Mist":
       case "Smoke":
@@ -47,6 +47,8 @@ class Weather {
       case "Clouds":
         return WeatherIcons.cloud;
         break;
+      default:
+        return WeatherIcons.tsunami;  //on fail
     }
   }
 }
