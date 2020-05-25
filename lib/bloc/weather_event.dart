@@ -15,7 +15,7 @@ class GetWeather extends WeatherEvent {
 
 }
 
-class GetCities extends WeatherEvent {
+/*class GetCities extends WeatherEvent {
   //final List<String> cities;
   //GetCities(this.cities);
   
@@ -23,4 +23,4 @@ class GetCities extends WeatherEvent {
   // TODO: implement props
   List<Object> get props => throw UnimplementedError();
 
-}
+}*/

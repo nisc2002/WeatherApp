@@ -1,6 +1,8 @@
+import 'model/city.dart';
 import 'model/weather.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/services.dart';
 
 abstract class WeatherRepository {
   Future<Weather> fetchWeather(String cityName);
@@ -30,14 +32,25 @@ class ExternWeatherRepository implements WeatherRepository {
 }
 
 abstract class CityRepository {
-  Future<List<String>> fetchCities();
+  Future<List<City>> fetchCities(String query);
 }
 
-class ExternCityRepository implements CityRepository {
+class LocalCityRepository implements CityRepository {
   @override
-  Future<List<String>> fetchCities() {
-    // TODO: implement fetchCities
-    throw UnimplementedError();
+  Future<List<City>> fetchCities(String query) async {
+    String data = await rootBundle.loadString("assets/cities.json");
+    var jsonData = json.decode(data);
+    //print(jsonData);
+    //print(jsonData.runtimeType);
+    List<City> results = [];
+
+    for(int i = 0; i < jsonData.length; i++) {
+      if (jsonData[i]['city'].toLowerCase().startsWith(query.toLowerCase())) {
+        results.add(City(jsonData[i]['city']));
+      }
+    }
+    return results;
+
   }
 }
 

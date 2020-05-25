@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/data/repository.dart';
 import 'package:weather_app/pages/weather_overview_page.dart';
 
+import 'bloc/city_bloc.dart';
 import 'bloc/weather_bloc.dart';
 
 void main() {
@@ -18,9 +19,12 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: BlocProvider(
+      home: MultiBlocProvider(providers: [
+        BlocProvider(
           create: (context) => WeatherBloc(ExternWeatherRepository()),
-          child: WeatherOverviewPage()),
+        ),
+        BlocProvider(create: (context) => CityBloc(LocalCityRepository()))
+      ], child: WeatherOverviewPage()),
     );
   }
 }

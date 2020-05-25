@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:weather_app/bloc/city_bloc.dart';
 import 'package:weather_app/bloc/weather_bloc.dart';
 import 'package:weather_app/data/model/weather.dart';
 import 'package:weather_icons/weather_icons.dart';
+import 'city_search.dart';
 
 class WeatherOverviewPage extends StatelessWidget {
   @override
@@ -15,7 +17,7 @@ class WeatherOverviewPage extends StatelessWidget {
           IconButton(
               icon: Icon(Icons.search),
               onPressed: () async{
-                WeatherEvent event = await showSearch(context: context, delegate: CitySearch());
+                WeatherEvent event = await showSearch(context: context, delegate: CitySearch(BlocProvider.of<CityBloc>(context)));
                 //print(event);
                 event != null ? BlocProvider.of<WeatherBloc>(context).add(event) : null;
               })
@@ -129,87 +131,6 @@ class WeatherOverviewPage extends StatelessWidget {
   Widget buildInitial() {
     return Container(
       color: Colors.blue,
-    );
-  }
-}
-
-class CitySearch extends SearchDelegate<WeatherEvent> {
-  final List<String> cities = [
-    "Winterthur",
-    "Zürich",
-    "Genf",
-    "Basel",
-    "Thurgau",
-    "Uri",
-    "Bern",
-  ];
-
-  final List<String> recentCities = [
-    "Winterthur",
-    "Zürich",
-    "Bern",
-  ];
-
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    //return [IconButton(icon: Icon(Icons.lock), onPressed: () {})];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(icon: Icon(Icons.close), onPressed: () {
-      close(context, null);
-    });
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<String> suggestions = [];
-    if (query.isEmpty) {
-      suggestions = recentCities;
-    } else {
-      for (int i = 0; i < cities.length; i++) {
-        if (cities[i].toLowerCase().startsWith(query.toLowerCase())) {
-          suggestions.add(cities[i]);
-        }
-      }
-    }
-
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        leading: Icon(Icons.location_city),
-        title: Text(suggestions[index]),
-        onTap:  () {
-          close(context, GetWeather(suggestions[index]));
-          },
-      ),
-      itemCount: suggestions.length,
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<String> suggestions = [];
-    if (query.isEmpty) {
-      suggestions = recentCities;
-    } else {
-      for (int i = 0; i < cities.length; i++) {
-        if (cities[i].toLowerCase().startsWith(query.toLowerCase())) {
-          suggestions.add(cities[i]);
-        }
-      }
-    }
-
-    return ListView.builder(
-      itemBuilder: (context, index) => ListTile(
-        leading: Icon(Icons.location_city),
-        title: Text(suggestions[index]),
-        onTap: () {
-          close(context, GetWeather(suggestions[index]));
-        },
-      ),
-      itemCount: suggestions.length,
     );
   }
 }

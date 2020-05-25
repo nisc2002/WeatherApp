@@ -11,6 +11,8 @@ part 'weather_state.dart';
 class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
   WeatherBloc(this.weatherRepository);
   final WeatherRepository weatherRepository;
+  //final CityRepository cityRepository;
+
   @override
   WeatherState get initialState => WeatherInitial();
 
@@ -26,7 +28,7 @@ class WeatherBloc extends Bloc<WeatherEvent, WeatherState> {
         yield WeatherLoaded(weather);
       }
       on NetworkError{
-        yield WeatherError("Verbindung fehlgeschlagen");
+        yield WeatherError("Connection failed");
       }
     }
   }
