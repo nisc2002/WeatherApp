@@ -11,7 +11,7 @@ class WeatherInitial extends WeatherState {
 
 class WeatherLoading extends WeatherState {
   @override
-  // TODO: implement props
+
   List<Object> get props => [];
 }
 
@@ -19,15 +19,15 @@ class WeatherLoaded extends WeatherState {
   WeatherLoaded (this.weather);
   final Weather weather;
   @override
-  // TODO: implement props
+
   List<Object> get props => [weather];
 }
 
 class WeatherError extends WeatherState {
-  String message;
+  final String message;
   WeatherError(this.message);
   @override
-  // TODO: implement props
+
   List<Object> get props => [message];
 
 }

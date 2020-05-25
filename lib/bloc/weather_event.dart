@@ -10,17 +10,6 @@ class GetWeather extends WeatherEvent {
   GetWeather(this.cityName);
   
   @override
-  // TODO: implement props
+
   List<Object> get props => [cityName];
-
 }
-
-/*class GetCities extends WeatherEvent {
-  //final List<String> cities;
-  //GetCities(this.cities);
-  
-  @override
-  // TODO: implement props
-  List<Object> get props => throw UnimplementedError();
-
-}*/

@@ -16,15 +16,17 @@ class WeatherOverviewPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
               icon: Icon(Icons.search),
-              onPressed: () async{
-                WeatherEvent event = await showSearch(context: context, delegate: CitySearch(BlocProvider.of<CityBloc>(context)));
-                //print(event);
-                event != null ? BlocProvider.of<WeatherBloc>(context).add(event) : null;
+              onPressed: () async {
+                WeatherEvent event = await showSearch(
+                    context: context,
+                    delegate: CitySearch(BlocProvider.of<CityBloc>(context)));
+                event != null
+                    ? BlocProvider.of<WeatherBloc>(context).add(event)
+                    : null;
               })
         ],
       ),
       body: Column(
-        //mainAxisAlignment: MainAxisAlignment.,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Row(
@@ -39,20 +41,26 @@ class WeatherOverviewPage extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 8.0),
-              child: BlocBuilder<WeatherBloc, WeatherState>(
-                //color: Colors.red,
-                //alignment: Alignment.center,
-                builder: (context, state) {
-                  if (state is WeatherInitial) {
-                    return buildInitial();
-                  } else if (state is WeatherLoading) {
-                    return buildLoading();
-                  } else if (state is WeatherLoaded) {
-                    return buildWeatherInfo(state.weather);
+              child: BlocListener<WeatherBloc, WeatherState>(
+                listener: (context, state) {
+                  if (state is WeatherError) {
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text("Connection failed"),
+                    ));
                   }
-                  return buildInitial();
                 },
-                //child: weatherInfo("Winterthur"),
+                child: BlocBuilder<WeatherBloc, WeatherState>(
+                  builder: (context, state) {
+                    if (state is WeatherInitial) {
+                      return buildInitial();
+                    } else if (state is WeatherLoading) {
+                      return buildLoading();
+                    } else if (state is WeatherLoaded) {
+                      return buildWeatherInfo(state.weather);
+                    }
+                    return buildInitial();
+                  },
+                ),
               ),
             ),
           ),
@@ -79,13 +87,6 @@ class WeatherOverviewPage extends StatelessWidget {
           weather.condition,
           style: TextStyle(fontSize: 40),
         ),
-        /*Expanded(
-          flex: 0.5,
-          child: Center(
-            child: Text(weather.condition),
-          )
-          ),*/
-        //Text(cityName),
         Expanded(
           flex: 3,
           child: FittedBox(
@@ -130,7 +131,7 @@ class WeatherOverviewPage extends StatelessWidget {
 
   Widget buildInitial() {
     return Container(
-      color: Colors.blue,
+      color: Colors.grey,
     );
   }
 }

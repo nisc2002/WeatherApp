@@ -17,15 +17,16 @@ class ExternWeatherRepository implements WeatherRepository {
     var response = await http.post(url, headers: {
       "Accept": "application/json"
     });
+
     if (response.statusCode != 200) {
-      throw NetworkError;
+      throw NetworkError();
     }
     //print(response.statusCode);
     var data = json.decode(response.body);
 
     return Weather(
       cityName: cityName,
-      celsius: data["main"]["temp"],
+      celsius: data["main"]["temp"].toDouble(),
       condition: data["weather"][0]["main"],
     );
   }
@@ -40,8 +41,7 @@ class LocalCityRepository implements CityRepository {
   Future<List<City>> fetchCities(String query) async {
     String data = await rootBundle.loadString("assets/cities.json");
     var jsonData = json.decode(data);
-    //print(jsonData);
-    //print(jsonData.runtimeType);
+
     List<City> results = [];
 
     for(int i = 0; i < jsonData.length; i++) {
@@ -50,7 +50,6 @@ class LocalCityRepository implements CityRepository {
       }
     }
     return results;
-
   }
 }
 

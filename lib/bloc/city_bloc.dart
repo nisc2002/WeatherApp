@@ -20,7 +20,6 @@ class CityBloc extends Bloc<CityEvent, CityState> {
   Stream<CityState> mapEventToState(
     CityEvent event,
   ) async* {
-    // TODO: implement mapEventToState
     yield CityLoading();
     if (event is GetCities) {
       try {

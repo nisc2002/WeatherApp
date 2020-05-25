@@ -9,7 +9,7 @@ class GetCities extends CityEvent {
 
   GetCities(this.query);
   @override
-  // TODO: implement props
+
   List<Object> get props => [query];
 
 }

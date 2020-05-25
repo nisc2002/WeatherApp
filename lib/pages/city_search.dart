@@ -3,14 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_app/bloc/city_bloc.dart';
 import 'package:weather_app/bloc/weather_bloc.dart';
 import 'package:weather_app/data/model/city.dart';
-import 'package:weather_app/data/repository.dart';
 
 class CitySearch extends SearchDelegate<WeatherEvent> {
   CitySearch(this.cityBloc);
   final Bloc<CityEvent, CityState> cityBloc;
 
   @override
-  List<Widget> buildActions(BuildContext context) {}
+  List<Widget> buildActions(BuildContext context) {
+    return null;
+  }
 
   @override
   Widget buildLeading(BuildContext context) {
@@ -24,18 +25,18 @@ class CitySearch extends SearchDelegate<WeatherEvent> {
   @override
   Widget buildResults(BuildContext context) {
     cityBloc.add(GetCities(query));
-  
+
     return BlocBuilder<CityBloc, CityState>(
       bloc: cityBloc,
       builder: (context, state) {
         if (state is CityInitial) {
           return buildInitial(state.recent);
-        }
-        if (state is CityLoading) {
+        } else if (state is CityLoading) {
           return buildLoading();
-        }
-        if (state is CityLoaded) {
+        } else if (state is CityLoaded) {
           return buildLoaded(state.cities);
+        } else {
+          return buildLoading();
         }
       },
     );
@@ -50,12 +51,12 @@ class CitySearch extends SearchDelegate<WeatherEvent> {
       builder: (context, state) {
         if (state is CityInitial) {
           return buildInitial(state.recent);
-        }
-        if (state is CityLoading) {
+        } else if (state is CityLoading) {
           return buildLoading();
-        }
-        if (state is CityLoaded) {
+        } else if (state is CityLoaded) {
           return buildLoaded(state.cities);
+        } else {
+          return buildLoading();
         }
       },
     );
